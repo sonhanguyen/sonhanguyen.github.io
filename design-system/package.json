@@ -1,0 +1,14 @@
+{
+  "name": "@sonha/design-system",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@mdx-js/loader": "^1.5.3",
+    "@storybook/addon-docs": "^5.2.8",
+    "react-scripts": "^3.3.0",
+    "sass-variable-loader": "^0.1.2",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "react": "^16.12.0"
+  }
+}

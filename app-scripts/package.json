@@ -1,0 +1,15 @@
+{
+  "name": "@sonha/app-scripts",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@sonha/scripts": "*",
+    "gulp-execa": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/webpack": "^4.41.6",
+    "immer": "^5.3.6",
+    "next": "^9.2.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}
