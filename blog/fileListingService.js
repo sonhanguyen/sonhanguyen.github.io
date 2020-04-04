@@ -57,55 +57,58 @@ class FileListingService {
   }
 }
 
-const recursiveResolve = async(map) => {
-  const state = { ...map }
-  await trampoline(
-    flattenPromises({ state, callback() {} })
-  )
-  return state
-} 
+const flattenPromises = async(map) => {
+  map = await map
 
-const flattenPromises = ({ state, callback }) => {
-  console.log(state)
-  const pairs = typeof state == 'string'
-    ? []
-    : Object.entries(state)
+  const clone =
+    Array.isArray(map) ? [] :
+    typeof map == 'object' ? {} :
+    null
+  
+  if (!clone) return map
 
-  return pairs.reduce(
-    (thunk, [key, value]) => async() => {
-      value = await value
-      const next =
-        Array.isArray(value) ? [ ...value ] :
-        typeof value == 'object' ? { ...value } :
-        value
-
-      return flattenPromises({
-        state: next,
-        callback() {
-          state[key] = next
-          return thunk
-        }
-      })
-    },
-    callback
-  )
-}
-
-const trampoline = async(computation, {
-  isThunk = thunk => typeof thunk == 'function',
-  call = thunk => thunk()
-} = {}) => {
-  while (isThunk(computation)) {
-    computation = await call(computation)
+  for (const [key, value] of Object.entries(map)) {
+    clone[key] = await flattenPromises(value)  
   }
 
-  return computation
+  return clone
 }
 
-new FileListingService('.', '**')
+const isFunction = target => typeof target == 'function'
+
+const serializable = (target, ...methods) => {
+  const descriptor = methods[1]
+  switch (true) {
+    case typeof descriptor == 'object':
+      descriptor.value = serializable(descriptor.value)
+
+    case typeof target == 'string':
+      return it => serializable(it, target, ...methods)
+    case isFunction(target.prototype && target.prototype.constructor):
+      return class extends target {
+        constructor(...args) {
+          super(...args)
+          serializable(this, ...methods)
+        }
+      }
+
+    case isFunction(target):
+      return (...args) => flattenPromises(target(...args))
+  }
+  
+  if (!methods.length) methods = Object.keys(target)
+
+  for (const key of methods) {
+    const func = target[key]
+    if (isFunction(func)) target[key] = serializable(func)
+  }
+
+  return target
+}
+
+serializable(new FileListingService('.', '**'))
   .list()
-  .then(recursiveResolve)
-  // .then(it => JSON.stringify(it, null, 2))
+  .then(it => JSON.stringify(it, null, 2))
   .then(console.log)
 
 
