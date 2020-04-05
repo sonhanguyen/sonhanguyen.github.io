@@ -136,14 +136,17 @@ const fromWebpackContext = context => {
   const files = list(RegExp(`^${dir}.+${pattern}`))
     .then(flatten)
     .then(collection => collection
-      .map(({ filePath, meta: props }) => {
+      .map(({ filePath, meta }) => {
         let slug = filePath.replace(/\.[^.]+$/, '')
         slug = slug.replace(/\/\\/g, '/')
         
         return {
-          props, slug,
-          name: slug.split('/').pop(),
-          component: filePath.replace(RegExp('^' + dir), '.')
+          slug,
+          props: {
+            ...meta,
+            component: filePath.replace(RegExp('^' + dir), '.')
+          },
+          name: slug.split('/').pop()
         }
       })
     )

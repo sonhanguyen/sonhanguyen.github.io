@@ -26,7 +26,12 @@ const patchWithAstroturfLoader = ({ module: { rules } }) =>
 const patchWithMdxLoader = ({ module: { rules } }) =>
   rules.push({
     test: /\.mdx$/,
-    loader: [ 'babel-loader', '@mdx-js/loader' ],
+    use: [
+      { loader: require.resolve('babel-loader'),
+        options: { presets: [require.resolve('next/babel') ] }
+      },
+      require.resolve('@mdx-js/loader')
+    ]
   })
 
 const patchResoverWithAppsNodeModules = ({ resolve }) => {

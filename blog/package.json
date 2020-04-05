@@ -10,6 +10,8 @@
     "zerorpc": "^0.9.8"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^1.5.8",
+    "@mdx-js/react": "^1.5.8",
     "@types/node": "^13.9.0",
     "astroturf": "^0.10.2",
     "lodash": "^4.17.15",

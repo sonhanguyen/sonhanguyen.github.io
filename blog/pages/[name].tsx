@@ -1,4 +1,5 @@
 import styled from 'astroturf'
+import { MDXProvider } from '@mdx-js/react'
 
 const Theme = styled('div')`
   --background: black;
@@ -11,21 +12,23 @@ const Sidebar = styled('div')`
   color: var(--foreground);
 `
 
-const Content = styled('div')`
+const Main = styled('div')`
   background: var(--middleground);
   color: blue;
 `
 
-export default (props) => {
-  console.log(props)
+export default ({ component, title }) => {
+  const { default: Content } = context(component)
 
   return <Theme>
     <Sidebar>
-      { props.title }
+      { title }
     </Sidebar>
-    <Content>
-      afa
-    </Content>
+    <Main>
+      <MDXProvider>
+        <Content />
+      </MDXProvider>
+    </Main>
   </Theme>
 }
 
