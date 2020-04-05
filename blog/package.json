@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "@sonha/app-scripts": "*",
+    "@sonha/scripts": "*",
+    "@types/react": "^16.9.23",
+    "bilby": "^0.0.2",
+    "glob": "^7.1.6",
+    "gray-matter": "^4.0.2",
+    "p-lazy": "^3.0.0",
+    "zerorpc": "^0.9.8"
+  },
+  "dependencies": {
+    "@types/node": "^13.9.0",
+    "astroturf": "^0.10.2",
+    "lodash": "^4.17.15",
+    "typescript": "^3.8.3"
+  }
+}

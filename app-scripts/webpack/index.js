@@ -1,11 +1,36 @@
-const { patchWithTsConfig } = require('./aliases')
-const { patchLoadersWithWorkspaceModules } = require('./libSrcLoaders')
+const path = require('path')
+const { createPatchWithTsConfig } = require('./aliases')
 
-exports.patchForLibSrc = (config, pattern = require('fs').realpathSync('../..')) => {
-  pattern = RegExp(pattern + '(?!.*node_modules.*)')
+exports.createPatch = (pattern = require('fs').realpathSync('../..')) => config =>
+  [ patchResoverWithAppsNodeModules,
+    createPatchWithTsConfig(),
+    patchWithAstroturfLoader,
+    patchWithMdxLoader,
+    createPatchLoadersWithWorkspaceModules(pattern)
+  ].reduce(
+    (patched, func) => (func(patched), patched),
+    config
+  )
 
-  patchLoadersWithWorkspaceModules(config, pattern)
-  patchWithTsConfig(config)
+const createPatchLoadersWithWorkspaceModules = pattern => ({ module: { rules } }) =>
+  rules.forEach(cloned => cloned.include = RegExp(pattern + '(?!.*node_modules.*)'))
 
-  return config
+const patchWithAstroturfLoader = ({ module: { rules } }) =>
+  rules.push({
+    test: /\.[tj]sx$/,
+    enforce: 'pre',
+    loader: 'astroturf/loader',
+    options: { extension: '.module.css', enableCssProp: true },
+  })
+
+const patchWithMdxLoader = ({ module: { rules } }) =>
+  rules.push({
+    test: /\.mdx$/,
+    loader: [ 'babel-loader', '@mdx-js/loader' ],
+  })
+
+const patchResoverWithAppsNodeModules = ({ resolve }) => {
+  const LIB = 'node_modules'
+  const { modules = [ LIB ] } = resolve
+  resolve.modules = [ path.join(process.cwd(), LIB), ...modules ]
 }

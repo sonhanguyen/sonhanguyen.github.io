@@ -1,6 +1,6 @@
 const { resolve } = require('path')
 
-exports.patchWithTsConfig = (webpackConfig, cwd = process.cwd()) => {
+exports.createPatchWithTsConfig = (cwd = process.cwd()) => webpackConfig => {
   const alias = {
     ...webpackConfig.resolve.alias || {},
     ...fromTsConfig(cwd)
