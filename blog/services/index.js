@@ -1,26 +1,21 @@
 
-const { createClient } = require('./rpc')
-const { list } = createClient(
-  { address: require('.').fileListingService },
-  [ 'list' ]
-).connect()
+const { createClient } = require('../libs/rpc')
+const directory = createClient({ address: require('./services').directory }).connect()
 
 const flatten = tree => {
   if (tree.filePath && !tree.children) return [ tree ]
 
-  const result = []
-  for (const descendants of Object.values(tree.children || tree).map(flatten)) {
-    result.push(...descendants)
-  }
-
-  return result
+  return [].concat(...Object
+    .values(tree.children || tree)
+    .map(flatten)
+  )
 }
 
 const pagesFromWebpackContext = context => {
   const desc = context.id.split(' ')
   const pattern = desc.pop()
   const dir = desc.shift().replace('./', '')
-  const files = list(RegExp(`^${dir}.+${pattern}`))
+  const files = directory.list(RegExp(`^${dir}.+${pattern}`))
     .then(flatten)
     .then(collection => collection
       .map(({ filePath, meta }) => {

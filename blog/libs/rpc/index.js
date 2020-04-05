@@ -30,13 +30,10 @@ exports.createServer = (options, impl) => {
     return server
   }
 
-  return Object.assign(
-    methods,
-    options, { start, stop }
-  )
+  return { ...options, start, stop }
 }
 
-exports.createClient = (options, methods = options) => {
+exports.createClient = options => {
   const client = new zerorpc.Client()
   const disconnect = () => client.close()
       
@@ -44,19 +41,15 @@ exports.createClient = (options, methods = options) => {
     client.on('error', options.onError || console.error)
     client.connect(options.address)
 
-    return methods.reduce(
-      (handlers, method) => {
-        handlers[method] = (...args) => new Promise((resolve, reject) => {
-          client.invoke(method, args, (error, res, meta) => {
-            if (error) reject(error)
+    return new Proxy({}, {
+      get: (_, method) => (...args) => new Promise((resolve, reject) => {
+        client.invoke(method, args, (error, res, meta) => {
+          if (error) reject(error)
 
-            resolve(res)
-          })
+          resolve(res)
         })
-        
-        return handlers
-      }, {}
-    )
+      })
+    })
   }
 
   return { connect, disconnect }

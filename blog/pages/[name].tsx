@@ -36,14 +36,14 @@ export default ({ component, title }) => {
 const context = require.context(__dirname, true, /\.mdx$/)
 
 export const getStaticPaths = async() => ({
-  paths: await require('../libs/services')
+  paths: await require('../services')
     .pagesFromWebpackContext(context)
     .getStaticPaths(),
   fallback: true
 })
 
 export const getStaticProps = async(route) => ({
-  props: await require('../libs/services')
+  props: await require('../services')
     .pagesFromWebpackContext(context)
     .getStaticProps(route)
 })

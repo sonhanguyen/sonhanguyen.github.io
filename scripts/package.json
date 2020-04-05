@@ -1,6 +1,9 @@
 {
   "name": "@sonha/scripts",
   "version": "0.0.1",
+  "bin": {
+    "run-npmi-linked": "link-install.js"
+  },
   "dependencies": {
     "gulp": "^4.0.2",
     "gulp-execa": "^2.0.0",

@@ -3,15 +3,15 @@
 const { dev, build } = require('@sonha/app-scripts')
 const { cli } = require('@sonha/scripts')
 
-const fileListingService = require('./fileListingService')
+const directory = require('./services/directory')
 
 cli({
   async dev() {
-    fileListingService.start()
+    directory.start()
     return await dev()
   },
   async build() {
-    fileListingService.start()
+    directory.start()
     return await build()
   }
 })

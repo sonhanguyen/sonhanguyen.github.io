@@ -4,10 +4,8 @@
     "@sonha/app-scripts": "*",
     "@sonha/scripts": "*",
     "@types/react": "^16.9.23",
-    "bilby": "^0.0.2",
     "glob": "^7.1.6",
     "memory-fs": "^0.5.0",
-    "p-lazy": "^3.0.0",
     "webpack": "^4.42.1",
     "zerorpc": "^0.9.8"
   },
