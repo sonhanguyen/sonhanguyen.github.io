@@ -1,6 +1,17 @@
 #!/usr/bin/env node
 
-const app = require('@sonha/app-scripts')
+const { dev, build } = require('@sonha/app-scripts')
 const { cli } = require('@sonha/scripts')
 
-cli(app)
+const fileListingService = require('./fileListingService')
+
+cli({
+  async dev() {
+    fileListingService.start()
+    return await dev()
+  },
+  async build() {
+    fileListingService.start()
+    return await build()
+  }
+})

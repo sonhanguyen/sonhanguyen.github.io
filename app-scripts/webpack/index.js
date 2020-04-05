@@ -23,16 +23,10 @@ const patchWithAstroturfLoader = ({ module: { rules } }) =>
     options: { extension: '.module.css', enableCssProp: true },
   })
 
-const patchWithMdxLoader = ({ module: { rules } }) =>
-  rules.push({
-    test: /\.mdx$/,
-    use: [
-      { loader: require.resolve('babel-loader'),
-        options: { presets: [require.resolve('next/babel') ] }
-      },
-      require.resolve('@mdx-js/loader')
-    ]
-  })
+const patchWithMdxLoader = ({ module: { rules } }) => {
+  const { module: { rules: [ mdx ] } } = require('./mdx.config')
+  rules.push(mdx)
+}
 
 const patchResoverWithAppsNodeModules = ({ resolve }) => {
   const LIB = 'node_modules'

@@ -1,12 +1,14 @@
 {
   "devDependencies": {
+    "@babel/runtime": "^7.9.2",
     "@sonha/app-scripts": "*",
     "@sonha/scripts": "*",
     "@types/react": "^16.9.23",
     "bilby": "^0.0.2",
     "glob": "^7.1.6",
-    "gray-matter": "^4.0.2",
+    "memory-fs": "^0.5.0",
     "p-lazy": "^3.0.0",
+    "webpack": "^4.42.1",
     "zerorpc": "^0.9.8"
   },
   "dependencies": {
@@ -15,6 +17,7 @@
     "@types/node": "^13.9.0",
     "astroturf": "^0.10.2",
     "lodash": "^4.17.15",
+    "react": "^16.13.1",
     "typescript": "^3.8.3"
   }
 }

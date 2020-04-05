@@ -35,19 +35,15 @@ export default ({ component, title }) => {
 // @ts-ignore
 const context = require.context(__dirname, true, /\.mdx$/)
 
-export const getStaticPaths = async() => {
-  const { fromWebpackContext } = require('../fileListingService')
-  const collection = fromWebpackContext(context)
+export const getStaticPaths = async() => ({
+  paths: await require('../libs/services')
+    .pagesFromWebpackContext(context)
+    .getStaticPaths(),
+  fallback: true
+})
 
-  return {
-    paths: await collection.getStaticPaths(),
-    fallback: true
-  }
-}
-
-export const getStaticProps = async(route) => {
-  const { fromWebpackContext } = require('../fileListingService')
-  const collection = fromWebpackContext(context)
-
-  return { props: await collection.getStaticProps(route)}
-}
+export const getStaticProps = async(route) => ({
+  props: await require('../libs/services')
+    .pagesFromWebpackContext(context)
+    .getStaticProps(route)
+})

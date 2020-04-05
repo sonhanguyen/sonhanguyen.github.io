@@ -1,5 +1,4 @@
-const { createServer, createClient } = require('./server')
-const grayMatter = require('gray-matter')
+const { createServer } = require('./libs/rpc')
 const path = require('path')
 const glob = require('glob')
 
@@ -39,7 +38,7 @@ class FileListingService {
               
               map[key] = {
                 filePath: dirPath,
-                children: new LazyPromise(resolve => resolve(children(paths, dirPath)))
+                children: LazyPromise.from(_ => children(paths, dirPath))
               }
           }
     
@@ -49,10 +48,9 @@ class FileListingService {
       )
     }
     
-    const meta = file => new LazyPromise(resolve => {
-      const { data } = grayMatter.read(path.join(cwd, file))
-    
-      return resolve(data)
+    const meta = file => LazyPromise.from(async() => {
+      const load = require('./libs/loader')
+      return load(path.resolve(cwd, file)).catch(console.error)
     })
 
     this.list = async(pattern) => children(
@@ -106,62 +104,7 @@ const serializable = (target, ...methods) => {
   return target
 }
 
-const server = createServer(
-  { address: 'tcp://127.0.0.1:4242' },
+module.exports = createServer(
+  { address: require('./libs').fileListingService },
   serializable(new FileListingService('.', '**'))
 )
-
-try{ server.start() }
-catch (e) {
-  if (!/Address already in use/.test(e)) console.error(e)
-}
-
-const { list } = createClient(server).connect()
-
-const flatten = tree => {
-  if (tree.filePath && !tree.children) return [ tree ]
-  
-  const result = []
-  for (const descendants of Object.values(tree.children || tree).map(flatten)) {
-    result.push(...descendants)
-  }
-
-  return result
-}
-
-const fromWebpackContext = context => {
-  const desc = context.id.split(' ')
-  const pattern = desc.pop()
-  const dir = desc.shift().replace('./', '')
-  const files = list(RegExp(`^${dir}.+${pattern}`))
-    .then(flatten)
-    .then(collection => collection
-      .map(({ filePath, meta }) => {
-        let slug = filePath.replace(/\.[^.]+$/, '')
-        slug = slug.replace(/\/\\/g, '/')
-        
-        return {
-          slug,
-          props: {
-            ...meta,
-            component: filePath.replace(RegExp('^' + dir), '.')
-          },
-          name: slug.split('/').pop()
-        }
-      })
-    )
-
-  return {
-    getStaticPaths: async() => (await files)
-      .map(({ name }) => ({ params: { name }}))
-    ,
-    getStaticProps: async({ params }) => {
-      const index = await files
-      const { props } = index.find(({ name }) => name === params.name)
-
-      return { index, ...props }
-    }
-  }
-}
-
-module.exports = { list, fromWebpackContext }
