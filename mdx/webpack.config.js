@@ -2,12 +2,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.mdx$/,
+        test: /\.mdx?$/,
         use: [
           { loader: require.resolve('babel-loader'),
             options: { presets: [require.resolve('next/babel') ] }
           },
-          require.resolve('@mdx-js/loader')
+          require.resolve('@mdx-js/loader'),
+          require.resolve('./fm-loader')
         ]
       }
     ]

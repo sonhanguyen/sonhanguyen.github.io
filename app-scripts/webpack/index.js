@@ -5,6 +5,7 @@ exports.createPatch = (pattern = require('fs').realpathSync('../..')) => config 
   [ patchResoverWithAppsNodeModules,
     createPatchWithTsConfig(),
     patchWithAstroturfLoader,
+    patchWithWebAssetsLoader,
     patchWithMdxLoader,
     createPatchLoadersWithWorkspaceModules(pattern)
   ].reduce(
@@ -23,10 +24,8 @@ const patchWithAstroturfLoader = ({ module: { rules } }) =>
     options: { extension: '.module.css', enableCssProp: true },
   })
 
-const patchWithMdxLoader = ({ module: { rules } }) => {
-  const { module: { rules: [ mdx ] } } = require('./mdx.config')
-  rules.push(mdx)
-}
+const patchWithMdxLoader = require('@sonha/mdx')
+const patchWithWebAssetsLoader = require('@sonha/webpack')
 
 const patchResoverWithAppsNodeModules = ({ resolve }) => {
   const LIB = 'node_modules'

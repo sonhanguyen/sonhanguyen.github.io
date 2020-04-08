@@ -1,0 +1,10 @@
+{
+  "name": "@sonha/mdx",
+  "version": "0.0.1",
+  "dependencies": {
+    "@mdx-js/loader": "^1.5.8",
+    "babel-loader": "^8.1.0",
+    "gray-matter": "^4.0.2",
+    "next": "^9.3.0"
+  }
+}

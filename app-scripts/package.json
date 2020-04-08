@@ -2,15 +2,13 @@
   "name": "@sonha/app-scripts",
   "version": "0.0.1",
   "devDependencies": {
-    "@sonha/scripts": "*"
+    "@sonha/scripts": "*",
+    "@sonha/webpack": "*",
+    "@sonha/mdx": "*"
   },
   "dependencies": {
     "@babel/types": "^7.8.7",
-    "@mdx-js/loader": "^1.5.8",
     "astroturf": "^0.10.2",
-    "babel-loader": "^8.1.0",
-    "jdown": "^1.0.3",
-    "mdx-loader": "^3.0.2",
     "next": "^9.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

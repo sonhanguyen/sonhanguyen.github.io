@@ -29,7 +29,7 @@ function compile(config, entry) {
 }
 
 // This provides a way for nodejs to load modules with regards to all webpack configs
-module.exports = entry => compile(require('@sonha/app-scripts/webpack/mdx.config'), entry)
+module.exports = entry => compile(require('@sonha/mdx/webpack.config'), entry)
   .then(code => {
     const virtualModule = {}
     new Function('module', code)(virtualModule)

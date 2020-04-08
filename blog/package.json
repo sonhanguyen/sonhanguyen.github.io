@@ -5,16 +5,14 @@
     "@sonha/scripts": "*",
     "@types/react": "^16.9.23",
     "glob": "^7.1.6",
-    "memory-fs": "^0.5.0",
-    "webpack": "^4.42.1",
     "zerorpc": "^0.9.8"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^1.5.8",
     "@mdx-js/react": "^1.5.8",
     "@types/node": "^13.9.0",
     "astroturf": "^0.10.2",
-    "lodash": "^4.17.15",
+    "gray-matter": "^4.0.2",
+    "next": "^9.3.4",
     "react": "^16.13.1",
     "typescript": "^3.8.3"
   }

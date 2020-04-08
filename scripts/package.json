@@ -2,7 +2,7 @@
   "name": "@sonha/scripts",
   "version": "0.0.1",
   "bin": {
-    "run-npmi-linked": "link-install.js"
+    "run-npmi-linked": "linkInstall.js"
   },
   "dependencies": {
     "gulp": "^4.0.2",
