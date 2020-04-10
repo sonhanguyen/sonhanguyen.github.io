@@ -1,7 +1,7 @@
 const zerorpc = require('zerorpc')
 
 exports.createServer = (options, impl) => {
-  const { methods = Object.keys(impl) } = options
+  const { methods = getCallableNames(impl) } = options
 
   const server = new zerorpc.Server(
     methods.reduce(
@@ -68,4 +68,20 @@ exports.createClient = options => {
   }
 
   return { connect, disconnect }
+}
+
+const getCallableNames = obj => {
+  const prototype = Object.getPrototypeOf(obj)
+
+  return [
+    ...Object
+      .getOwnPropertyNames(obj)
+      .filter(name => {
+        if (Object[name]) return
+        const { value, get } = Object.getOwnPropertyDescriptor(obj, name)
+        return get || (typeof value == 'function')
+      })
+    ,
+    ...prototype ? getCallableNames(prototype) : []
+  ]
 }

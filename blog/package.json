@@ -2,10 +2,10 @@
   "devDependencies": {
     "@babel/runtime": "^7.9.2",
     "@sonha/app-scripts": "*",
+    "@sonha/rpc": "*",
     "@sonha/scripts": "*",
     "@types/react": "^16.9.23",
-    "glob": "^7.1.6",
-    "zerorpc": "^0.9.8"
+    "glob": "^7.1.6"
   },
   "dependencies": {
     "@mdx-js/react": "^1.5.8",
@@ -14,6 +14,7 @@
     "gray-matter": "^4.0.2",
     "next": "^9.3.4",
     "react": "^16.13.1",
+    "sanitize.css": "^11.0.0",
     "typescript": "^3.8.3"
   }
 }

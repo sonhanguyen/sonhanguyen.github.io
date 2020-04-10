@@ -1,4 +1,5 @@
 const name = 'static/[name].[hash].[ext]'
+
 module.exports = {
   module: {
     rules: [
@@ -12,6 +13,8 @@ module.exports = {
         use: {
           loader: require.resolve('url-loader'),
           options: {
+            limit: 10000,
+            fallback: require.resolve('responsive-loader'),
             name: name.replace(/(\[hash\])/, '[width]-$1'),
             adapter: require('responsive-loader/sharp')
           }

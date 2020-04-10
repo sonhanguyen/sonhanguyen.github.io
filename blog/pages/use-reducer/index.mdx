@@ -1,0 +1,42 @@
+---
+title: How to useReducer
+---
+
+Let's try to model the state of a react component like this
+
+<img {...require('./creditcard.png')} />
+
+we first start with 
+```
+type SavedCreditCard = { cardNumber: string, cvv: string }
+
+type State = Partial<SavedCreditCard> & {
+  newCCFormIsShown: boolean
+}
+```
+enum ActionType { ToggleNewCCForm, SelectSaved }
+const toggleNewCCForm = () =>
+  ({ type: ActionType.ToggleNewCCForm } as const)
+const selectCardNumber = (cardNumber: string) =>
+  ({ type: ActionType.SelectSaved, cardNumber } as const)
+
+type Action = ReturnType<
+| typeof toggleNewCCForm
+| typeof selectCardNumber
+>
+
+const reducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case ActionType.ToggleNewCCForm: return {
+      ...state,
+      newCCFormIsShown: !state.newCCFormIsShown
+    }
+
+    case ActionType.SelectSaved: return {
+      ...state,
+      cardNumber: action.cardNumber
+    }
+
+    default: return state
+  }
+}

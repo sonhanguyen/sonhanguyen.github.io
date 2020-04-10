@@ -10,8 +10,7 @@ const path = require('path')
 
 module.exports = (id, cmd = 'npm') => {
   id = require.resolve(id)
-  const { loaded } = require.cache[id]
-  if (loaded) return
+  if (require.cache[id].loaded) return
   
   const node_modules = String($(`cd $(dirname ${id}) && echo $(npm root)`)).trim()
 

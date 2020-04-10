@@ -1,6 +1,3 @@
-
-const { createClient } = require('../libs/rpc')
-const directory = createClient(require('./directory')).connect()
 const path = require('path')
 
 const flatten = tree => {
@@ -12,6 +9,9 @@ const flatten = tree => {
     .map(flatten)
   )
 }
+
+const { createClient } = require('@sonha/rpc')
+const directory = createClient(require('./directory')).connect()
 
 const pagesFromWebpackContext = context => {
   const desc = context.id.split(' ')
@@ -47,8 +47,9 @@ const pagesFromWebpackContext = context => {
     },
     async getStaticProps({ params }) {
       const index = await files
-      const { props } = index.find(({ props }) => params.slug.join`/` === props.path)
-      return { index, ...props }
+      const page = index.find(({ props }) => params.slug.join`/` === props.path)
+
+      return { index, ...page && page.props }
     }
   }
 }

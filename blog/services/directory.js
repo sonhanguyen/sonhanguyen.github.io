@@ -1,61 +1,39 @@
-const { createServer } = require('../libs/rpc')
 const path = require('path')
-const glob = require('glob')
 
-class FileListingService {
-  constructor(cwd, pattern) {
+class DirectoryService {
+  constructor(cwd, expansion) {
     cwd = path.resolve(__dirname, cwd)
-    const filePaths = new Promise((resolve, reject) => glob(
-      pattern,
-      { cwd, nodir: true, ignore: 'node_modules/**' },
-      (error, files) => error ? reject(error) : resolve(files)
-    ))
     
     Object.assign(this, {
-      filePaths, cwd, list: async(pattern) => this.children(
-        (await filePaths).filter(file => file.match(pattern))
-      )
+      cwd,
+      list: memoise(async(pattern) => {
+        const files = await glob(cwd, expansion)
+
+        return children(
+          files.filter(file => file.match(pattern)),
+          { cwd }
+        )
+      })
     })
-  }
-  
-  meta(file) {
-    if (/\.mdx?$/.test(file)) return new Promise(resolve => {
-      const { data } = require('gray-matter').read(path.join(this.cwd, file))
-    
-      return resolve(data)
-    })
-  }
-
-  children(paths, rootPath = '') {
-    if (rootPath) {
-      rootPath += path.sep
-      paths = paths.filter(file => file.startsWith(rootPath))
-    }
-
-    return flattenPromises(paths.reduce(
-      (map, filePath) => {
-        const relative = filePath.substr(rootPath.length)
-        const [ key ] = relative.split(path.sep, 1)
-
-        switch (true) {
-          case key in map: break
-          case key == relative:
-            map[key] = { filePath, meta: this.meta(filePath) }
-            break
-          default: 
-            const dirPath = rootPath + key
-            
-            map[key] = {
-              filePath: dirPath,
-              children: this.children(paths, dirPath)
-            }
-        }
-
-        return map
-      }, {}
-    ))
   }
 }
+
+const memoise = (func, { cache = {}, keyGen = JSON.stringify } = {}) => Object.assign(
+  (...args) => {
+    const key = keyGen.call(cache, args)
+    if (key in cache) return cache[key]
+    return cache[key] = func(...args)
+  },
+  { cache }
+)
+
+const glob = memoise(
+  async(cwd, pattern) => await new Promise((resolve, reject) => require('glob')(
+    pattern,
+    { cwd, nodir: true, ignore: 'node_modules/**' },
+    (error, files) => error ? reject(error) : resolve(files)
+  ))
+)
 
 const flattenPromises = async(map) => {
   map = await map
@@ -74,7 +52,47 @@ const flattenPromises = async(map) => {
   return clone
 }
 
+const meta = memoise((file, cwd) => {
+  if (/\.mdx?$/.test(file)) return new Promise(resolve => {
+    const { data } = require('gray-matter').read(path.join(cwd, file))
+  
+    return resolve(data)
+  })
+})
+
+const children = (paths, { cwd, rootPath = '' } = {}) => {
+  if (rootPath) {
+    rootPath += path.sep
+    paths = paths.filter(file => file.startsWith(rootPath))
+  }
+
+  return flattenPromises(paths.reduce(
+    (map, filePath) => {
+      const relative = filePath.substr(rootPath.length)
+      const [ key ] = relative.split(path.sep, 1)
+
+      switch (true) {
+        case key in map: break
+        case key == relative:
+          map[key] = { filePath, meta: meta(filePath, cwd) }
+          break
+        default: 
+          const dirPath = rootPath + key
+          
+          map[key] = {
+            filePath: dirPath,
+            children: children(paths, { cwd, rootPath: dirPath })
+          }
+      }
+
+      return map
+    }, {}
+  ))
+}
+
+const { createServer } = require('@sonha/rpc')
+
 module.exports = createServer(
   { address: 'tcp://127.0.0.1:4242' },
-  new FileListingService('..', 'pages/**')
+  new DirectoryService('..', 'pages/**')
 )

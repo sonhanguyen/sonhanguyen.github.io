@@ -2,18 +2,18 @@ import dynamic from 'next/dynamic'
 import Shell from 'components/Shell'
 import Nav from 'components/Nav'
 
-export default ({ component, title, index, path }) => {
-  const render = dynamic(async () => (await context(component)).default)
-
+export default ({ component, title, index = [], path }) => {
+  const Content = dynamic(async () => (await context(component)).default)
   index = index.map(_ => _.props)
 
   return (
-    <Shell
-      header={title}
-      footer={<Nav items={index.filter(_ => _.path !== path)} />}
-      aside={<Nav items={index} />}
-    >
-      {render}
+    <Shell Content={Content}>
+      <Shell.Footer>
+        <Nav items={index.filter(_ => _.path !== path)} />
+      </Shell.Footer>
+      <Shell.Aside>
+        <Nav items={index} />
+      </Shell.Aside>
     </Shell>
   )
 }
