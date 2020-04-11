@@ -8,9 +8,7 @@ export default ({ component, title, index = [], path }) => {
 
   return (
     <Shell Content={Content}>
-      <Shell.Footer>
-        <Nav items={index.filter(_ => _.path !== path)} />
-      </Shell.Footer>
+      <Shell.Header>{title}</Shell.Header>
       <Shell.Aside>
         <Nav items={index} />
       </Shell.Aside>

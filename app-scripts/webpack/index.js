@@ -35,7 +35,7 @@ const patchWithAstroturfLoader = ({ module: { rules } }) =>
     test: /\.[tj]sx$/,
     enforce: 'pre',
     loader: 'astroturf/loader',
-    options: { extension: '.module.css', enableCssProp: true },
+    options: { extension: '.module.scss', enableCssProp: true },
   })
 
 const patchWithMdxLoader = require('@sonha/mdx')

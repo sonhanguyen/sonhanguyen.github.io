@@ -15,6 +15,8 @@
     "next": "^9.3.4",
     "react": "^16.13.1",
     "sanitize.css": "^11.0.0",
-    "typescript": "^3.8.3"
+    "sass": "^1.26.3",
+    "typescript": "^3.8.3",
+    "webfontloader": "^1.6.28"
   }
 }

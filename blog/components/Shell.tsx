@@ -1,133 +1,103 @@
 import React from 'react'
 import { MDXProvider } from '@mdx-js/react'
-import { Theme } from 'components'
-import styled, { css } from 'astroturf'
+import { Theme, Styled } from 'components'
+import styled from 'astroturf'
 import {
-  createElement,
-  ComponentProps,
-  ComponentType,
   ElementType,
   ReactNode,
   Children
 } from 'react'
 
-css`@import url(~sanitize.css)`
+import { Slot, slot, forOne, ofUnknownType } from './slot'
+
+if (typeof window != 'undefined') require('webfontloader').load({
+  google: { families: ['Fira Code'] }
+})
+
 type Props = {
   Content: ElementType
   children: ReactNode
 }
 
 const Shell = ({ children, Content }: Props) => {
-  const main = ofUnknownType([], Children.toArray(children))
+  const main = ofUnknownType(Object.values(Element), Children.toArray(children))
   
   return <Theme>
     <Layout>
-      <aside>
-        {portals.AsideHeader.match(children)}
-        {portals.Aside.match(children)}
-        {portals.AsideFooter.match(children)}
-      </aside>
-      {portals.header.match(children)}
-      <MDXProvider>
-        <Layout.main>
-          { main }
-          <Content />
-        </Layout.main>
-      </MDXProvider>
-      {portals.footer.match(children)}
+      <Sidebar>
+        {slots.AsideHeader.match(children)}
+        {slots.Aside.match(children)}
+        {slots.AsideFooter.match(children)}
+      </Sidebar>
+      <Body>
+        {slots.Header.match(children)}
+        <Main>
+          <MDXProvider>
+            { main }
+            <Content />
+          </MDXProvider>
+        </Main>
+      </Body>
     </Layout>
   </Theme>
 }
 
-import createGrid from './createGrid'
 
-const component = styled.div`
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 100px 200px;
+const Layout = styled.div`
+  --header-height: 7rem;
+  --aside-width: 15rem;
+  --main-width: 40rem;
+
+  width: calc(var(--main-width) + calc(2 * var(--aside-width)));
+  font-family: 'Fira Code';
+  margin: auto;
+  display: flex;
 `
-const Layout = createGrid({
-  ...css`.className {}` as any,
-  component
-} as const)<'Aside' | 'footer' | 'header' | 'main'>(`
-  ". AsideHeader header ."
-  ". Aside main ."
-  ". AsideFooter footer ."
-`).withComponents({
-  AsideHeader: 'header',
-  AsideFooter: 'footer'
-})
 
-const filter = <S extends {}, E>(sample: S, elements: E[]): Array<E & S> => {
-  const entries = Object.entries(sample)
+const Main = styled(Styled).attrs({ as: 'main' })`
+  width: var(--main-width);
+  text-align: justify;
+`
 
-  return elements.filter((element): element is E & S =>
-    entries.every(([key, val]) => element[key] === val)
+const Sidebar = styled.aside`
+  width: var(--aside-width);
+  min-height: 100vh;
+  text-align: right;
+`
+
+const Body = styled.div`
+  min-height: 100vh;
+  flex: 1;
+`
+
+module Element {
+  // astroturf will fail to static analyse if Element is an object
+  
+  export const Header = styled.header`
+    height: var(--header-height);
+  `
+
+  export const Aside = styled.nav`
+    grid-area: main-start / 1 / -1 / auto;
+  `
+  
+  export const AsideHeader = styled.header`
+    height: var(--header-height);
+    width: var(--aside-width);
+  `
+
+  export const AsideFooter = styled.footer`
+    background: blue;
+  `
+}
+
+const slots: Record<keyof typeof Element, Slot> = Object
+  .entries(Element)
+  .reduce(
+    (map, [name, component]) => {
+      map[name] = slot(forOne(component))
+      return map
+    }, {} as any
   )
-}
 
-const ofUnknownType = <T, E>(types: T[], elements: E[]) => elements
-  .filter(({ type }: any) => !types.includes(type))
-
-type Portal<P extends {}> =
-& { match(children: ReactNode | ReactNode[]): typeof children } 
-& ComponentType<P>
-
-const slot = <P extends {}>(
-  render: (_: P[]) => ReactNode,
-  options: { displayName: string } = render as any
-) => {
-  const type = () => null
-  const match = children => {
-    const elements = filter({ type }, Children.toArray(children))
-
-    return render(elements.map(({ props }: any) => props))
-  }
-
-  return Object.assign(type, {
-    displayName: options.displayName,
-    match
-  }) 
-}
-
-const forOne = <P extends {}>(slot: ElementType<P>, defaultProps?: P) => {
-  const { 
-    name = slot as any,
-    displayName = name
-  }: Record<string, string> = slot as any
-
-  return Object.assign(
-    (propArray: P[]): ReactNode => {
-      if (propArray.length > 1) throw Error(
-        'only one portal expected for ' + displayName
-      )
-
-      const [ props ] = propArray      
-      return createElement(slot, {...defaultProps, ...props})
-    }, { displayName }
-  )
-}
-
-const portals: {
-  [K in keyof typeof Layout]: typeof Layout[K] extends ElementType
-    ? Portal<ComponentProps<typeof Layout[K]>>
-    : never 
-} = (
-  [ 'AsideHeader', 'AsideFooter', 'Aside', 'footer', 'header', 'main' ] as const
-).reduce(
-  (map, name) => {
-    map[name] = slot(forOne(Layout[name]))
-    return map
-  }, {} as any
-)
-
-export default Object.assign(
-  Shell,
-  {
-    Aside: Object.assign(portals.Aside, {
-      Header: portals.AsideHeader,
-      Footer: portals.AsideFooter
-    }),
-    Header: portals.header,
-    Footer: portals.footer
-  }
-)
+export default Object.assign(Shell, slots)
