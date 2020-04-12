@@ -1,0 +1,26 @@
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: linux
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      uses: github-action-for-pnpm
+      with:
+        args: install
+    - name: Build
+      run: |
+        cd blog
+        ./scripts build
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.4.7
+      with:
+        BRANCH: gh-pages
+        FOLDER: out
