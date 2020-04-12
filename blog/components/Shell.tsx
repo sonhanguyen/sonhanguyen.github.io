@@ -15,8 +15,8 @@ if (typeof window != 'undefined') require('webfontloader').load({
 })
 
 type Props = {
-  Content: ElementType
-  children: ReactNode
+  Content?: ElementType
+  children?: ReactNode
 }
 
 const Shell = ({ children, Content }: Props) => {
@@ -34,7 +34,7 @@ const Shell = ({ children, Content }: Props) => {
         <Main>
           <MDXProvider>
             { main }
-            <Content />
+            { Content && <Content /> }
           </MDXProvider>
         </Main>
       </Body>
@@ -77,9 +77,7 @@ module Element {
     height: var(--header-height);
   `
 
-  export const Aside = styled.nav`
-    grid-area: main-start / 1 / -1 / auto;
-  `
+  export const Aside = 'nav'
   
   export const AsideHeader = styled.header`
     height: var(--header-height);

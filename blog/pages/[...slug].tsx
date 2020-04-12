@@ -3,8 +3,10 @@ import Shell from 'components/Shell'
 import Nav from 'components/Nav'
 
 export default ({ component, title, index = [], path }) => {
-  console.log(index, component, context.keys())
-  const Content = dynamic(async () => (await context(component)).default)
+  const Content = component && dynamic(async () =>
+    (await context(component)).default
+  )
+
   index = index.map(_ => _.props)
 
   return (

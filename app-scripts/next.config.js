@@ -1,5 +1,6 @@
 const { createPatch } = require('./webpack')
 
-exports.webpack = createPatch()
-
-// exports.exportPathMap = async() => {
+module.exports = {
+  webpack: createPatch(),
+  assetPrefix: './'
+}
