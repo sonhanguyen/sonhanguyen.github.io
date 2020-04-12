@@ -12,6 +12,6 @@ cli({
   },
   async build() {
     directory.start()
-    return await build()
+    return await build().then(directory.stop)
   }
 })

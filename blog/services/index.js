@@ -1,44 +1,28 @@
-const path = require('path')
-
-const flatten = tree => {
-  if (tree.filePath && !tree.children) return [ tree ]
-
-  return [].concat(
-    ...Object
-    .values(tree.children || tree)
-    .map(flatten)
-  )
-}
-
 const { createClient } = require('@sonha/rpc')
 const directory = createClient(require('./directory')).connect()
 
-const pagesFromWebpackContext = context => {
-  const desc = context.id.split(' ')
-  const pattern = desc.pop()
-
-  const dir = desc.shift().replace('./', '')
-
-  const files = directory.list(RegExp(`^${dir}.+${pattern}`))
-    .then(flatten)
-    .then(collection => collection
-      .map(({ filePath, meta }) => {
-        const trim = '^' + dir
-        filePath = filePath.substr(trim.length)
-        const route = filePath
-          .replace(/\/\\/g, '/')
+exports.pages = context => {
+  const files = directory
+    .list(context
+      .keys()
+      .map(context.resolve)
+    )
+    .then(index => index.map(
+      ({ path, meta }) => {
+        const component = context.key(path)
+        path = context.path(path)
           .replace(/(\/index)?\.[^.]+$/, '')
 
         return {
           props: {
             ...meta,
-            path: route,
-            component: `.${path.sep}${filePath}`
+            component,
+            path,
           },
-          slug: route.split`/`
+          slug: path.split`/`
         }
-      })
-    )
+      }
+    ))
 
   return {
     async getStaticPaths() {
@@ -54,4 +38,3 @@ const pagesFromWebpackContext = context => {
   }
 }
 
-module.exports = { pagesFromWebpackContext }

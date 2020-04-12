@@ -3,6 +3,7 @@ import Shell from 'components/Shell'
 import Nav from 'components/Nav'
 
 export default ({ component, title, index = [], path }) => {
+  console.log(index, component, context.keys())
   const Content = dynamic(async () => (await context(component)).default)
   index = index.map(_ => _.props)
 
@@ -16,18 +17,17 @@ export default ({ component, title, index = [], path }) => {
   )
 }
 
-// @ts-ignore
-const context = require.context(__dirname, true, /\.mdx?$/, 'lazy')
+import context from '..'
 
 export const getStaticPaths = async() => ({
   paths: await require('../services')
-    .pagesFromWebpackContext(context)
+    .pages(context)
     .getStaticPaths(),
   fallback: true
 })
 
 export const getStaticProps = async(route) => ({
   props: await require('../services')
-    .pagesFromWebpackContext(context)
+    .pages(context)
     .getStaticProps(route)
 })
