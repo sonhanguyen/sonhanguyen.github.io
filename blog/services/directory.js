@@ -1,4 +1,4 @@
-const memoise = (func, { cache = {}, keyGen = JSON.stringify } = {}) => Object.assign(
+const memoize = (func, { cache = {}, keyGen = JSON.stringify } = {}) => Object.assign(
   (...args) => {
     const key = keyGen.call(cache, args)
     if (key in cache) return cache[key]
@@ -7,19 +7,15 @@ const memoise = (func, { cache = {}, keyGen = JSON.stringify } = {}) => Object.a
   { cache }
 )
 
-const meta = memoise(file => {
+const meta = memoize(file => {
   if (/\.mdx?$/.test(file)) return new Promise(resolve => {
     const { data } = require('gray-matter').read(file)
     return resolve(data)
   })
 })
 
-const { createServer } = require('@sonha/rpc')
-
-module.exports = createServer({ address: 'tcp://127.0.0.1:4242' }, {
-  list: memoise(paths => Promise.all(
-    paths.map(
-      async(path) => ({ path, meta: await meta(path) })
-    )
-  ))
-})
+exports.list = memoize(paths => Promise.all(
+  paths.map(
+    async(path) => ({ path, meta: await meta(path) })
+  )
+))

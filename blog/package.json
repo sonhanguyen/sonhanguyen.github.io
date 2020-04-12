@@ -2,7 +2,6 @@
   "devDependencies": {
     "@babel/runtime": "^7.9.2",
     "@sonha/app-scripts": "*",
-    "@sonha/rpc": "*",
     "@sonha/scripts": "*",
     "@types/react": "^16.9.23",
     "glob": "^7.1.6"

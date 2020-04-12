@@ -1,8 +1,5 @@
-const { createClient } = require('@sonha/rpc')
-const directory = createClient(require('./directory')).connect()
-
 exports.pages = context => {
-  const files = directory
+  const files = require('./directory')
     .list(context
       .keys()
       .map(context.resolve)

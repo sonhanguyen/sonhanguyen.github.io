@@ -1,7 +1,0 @@
-{
-  "name": "@sonha/rpc",
-  "version": "0.0.1",
-  "dependencies": {
-    "zerorpc": "^0.9.8"
-  }
-}
