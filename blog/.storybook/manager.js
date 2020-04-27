@@ -1,0 +1,1 @@
+import '@sonha/web-scripts/.storybook/manager'

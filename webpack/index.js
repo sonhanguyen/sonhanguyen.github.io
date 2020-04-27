@@ -1,4 +1,4 @@
-module.exports = ({ module: { rules } }) => {
+module.exports = static => ({ module: { rules } }) => {
   const config = require('./base.config')
-  rules.push(...config.module.rules)
+  rules.push(...config(static).module.rules)
 }

@@ -17,7 +17,7 @@ jobs:
       run: |
         cd blog
         ./scripts.js build
-    - name: Deploy to gh-pages
+    - name: Deploy to github.io
       uses: peaceiris/actions-gh-pages@v3.5.3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

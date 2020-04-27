@@ -50,7 +50,7 @@ export const forOne = <P extends {}>(slot: ElementType<P>) => {
   return Object.assign(
     (defaultProps, ...propArray: P[]): ReactNode => {
       if (propArray.length > 1) throw Error(
-        'only one element expected for ' + displayName
+        'at most one instance expected for ' + displayName
       )
 
       const [ props ] = propArray      

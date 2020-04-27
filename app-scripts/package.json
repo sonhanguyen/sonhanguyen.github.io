@@ -4,11 +4,14 @@
   "devDependencies": {
     "@sonha/mdx": "*",
     "@sonha/scripts": "*",
-    "@sonha/webpack": "*"
+    "@sonha/web-scripts": "*",
+    "@sonha/webpack": "*",
+    "sass": "^1.26.5",
+    "schema-utils": "^2.6.6",
+    "sharp": "^0.25.2"
   },
   "dependencies": {
     "@babel/types": "^7.8.7",
-    "astroturf": "^0.10.2",
     "next": "^9.3.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

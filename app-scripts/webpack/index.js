@@ -1,12 +1,11 @@
 const path = require('path')
 const { createPatchWithTsConfig } = require('./aliases')
 
-exports.createPatch = (pattern = require('fs').realpathSync('../..')) => config =>
+exports.createPatch = (pattern = require('fs').realpathSync('../..')) => (config, { isServer } = {}) =>
   [ patchResoverWithAppsNodeModules,
     createPatchWithTsConfig(),
-    patchWithAstroturfLoader,
-    patchWithWebAssetsLoader,
-    patchCssModuleImpure,
+    createPatchForWebAssets(isServer ? './_next/static' : undefined),
+    patchCssModulesImpure,
     patchWithMdxLoader,
     createPatchLoadersWithWorkspaceModules(pattern)
   ].reduce(
@@ -17,7 +16,7 @@ exports.createPatch = (pattern = require('fs').realpathSync('../..')) => config 
 const createPatchLoadersWithWorkspaceModules = pattern => ({ module: { rules } }) =>
   rules.forEach(rule => rule.include = RegExp(pattern + '(?!.*node_modules.*)'))
 
-const patchCssModuleImpure =  ({ module: { rules } }) => {
+const patchCssModulesImpure =  ({ module: { rules } }) => {
   const cssModuleOptions = rule => {
     const { options = {} } = rule
     
@@ -30,17 +29,11 @@ const patchCssModuleImpure =  ({ module: { rules } }) => {
   ).forEach(({ rule }) => cssModuleOptions(rule).mode = 'local')
 }
 
-const patchWithAstroturfLoader = ({ module: { rules } }) =>
-  rules.push({
-    test: /\.[tj]sx$/,
-    enforce: 'pre',
-    loader: 'astroturf/loader',
-    options: { extension: '.module.scss', enableCssProp: true },
-  })
-
 const patchWithMdxLoader = require('@sonha/mdx')
-const patchWithWebAssetsLoader = require('@sonha/webpack')
+const createPatchForWebAssets = require('@sonha/webpack')
 
+// make webpack priority local (app's) dependencies over dependencies' dependencies
+// there might be a better way to do this with federated webpack in v5
 const patchResoverWithAppsNodeModules = ({ resolve }) => {
   const LIB = 'node_modules'
   const { modules = [ LIB ] } = resolve

@@ -1,0 +1,7 @@
+$breakpoints: (mobile: 480px, tablet: 830px);
+
+:export {
+  @each $breakpoint, $px in $breakpoints {
+    #{$breakpoint}: $px;
+  }
+}

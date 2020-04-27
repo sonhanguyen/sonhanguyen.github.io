@@ -8,12 +8,11 @@ css`
   }
 `
 
-export const Theme = styled('div')`
+export const Theme = styled.div`
   --background: black;
   --middleground: gray;
   --foreground: white;
 
-  min-width: 100vw;
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
