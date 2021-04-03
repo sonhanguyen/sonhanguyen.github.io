@@ -2,16 +2,16 @@ import dynamic from 'next/dynamic'
 import Shell from 'components/Shell'
 import Nav from 'components/Nav'
 
-export default ({ component, title, index = [], path }) => {
+export default function Post({ component, title, index = [], path }) {
   const Content = component && dynamic(async () =>
     (await context(component)).default
   )
-console.log(path)
+
   index = index.map(_ => _.props)
 
   return (
     <Shell Content={Content}>
-      <Shell.Header>{title}</Shell.Header>
+      <Shell.Title>{title}</Shell.Title>
       <Shell.Aside>
         <Nav items={index} />
       </Shell.Aside>

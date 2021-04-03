@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'astroturf'
+import styled from 'astroturf/react'
 import { motion } from 'framer-motion'
 import { withMediaClass } from 'components/withHook'
 

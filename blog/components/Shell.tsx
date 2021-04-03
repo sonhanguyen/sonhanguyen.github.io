@@ -1,8 +1,8 @@
 import * as React from 'react'
 import SplitPane from 'components/SplitPane'
 import { MDXProvider } from '@mdx-js/react'
-import { Theme, Styled } from 'components'
-import styled from 'astroturf'
+import { Theme, atom } from 'components'
+import styled from 'astroturf/react'
 
 import { Slot, slot, forOne, ofUnknownType } from './slot'
 import { withMediaClass } from 'components/withHook'
@@ -36,6 +36,7 @@ const Shell = ({ children, Content, ...props }: Props) => {
         }
       >
         <Main>
+          <Title>{slots.Title.match(children)}</Title>
           <MDXProvider>
             { main }
             { Content && <Content /> }
@@ -63,10 +64,12 @@ const Hambuger = styled.div<{ on?: boolean }>`
 `
 
 const Main = withMediaClass(
-  styled(Styled).attrs({ as: 'main' })`
+  styled.main`
+    composes: ${atom};
+
     text-align: justify;
-    flex: 1;
-    
+    position: relative;
+
     &.wide {
       max-width: calc(100vw - var(--aside-width));
     }
@@ -99,7 +102,9 @@ const Body = styled.div`
 
 const Title = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 100%;
+  left: 0;
+  right: 0;
 `
 
 const Header = styled(
@@ -109,24 +114,21 @@ const Header = styled(
     ...props
   }: JSX.IntrinsicElements['header'] & { background }) => {
     if (typeof background == 'string') background = { src: background }
-    if (background.src) background = <img { ...background } /> 
-
-    let title: any = React.Children.toArray(children)
-    if (title.every(child => typeof child != 'object')) {
-      title = title.join()
-    } 
+    if (background.src) background = <img { ...background } />
     
     return <header { ...props }>
       {background}
-      <Title>{ title }</Title>
     </header>
   })`
   position: sticky;
+  top: 0;
   max-width: 100%;
+  display: flex;
+  align-content: flex-end;
 
   & img {
     width: 100%;
-    object-fit: none;
+    object-fit: cover;
     object-position: 50% 50%;
   }
 `
@@ -141,10 +143,12 @@ const AsideHeader = styled.header`
   top: calc(-1 * var(--header-height));
   height: var(--header-height);
   width: var(--aside-width);
+  display: flex;
+  align-content: flex-end;
 `
 
 const AsideFooter = styled.footer`
-  align-content: flex-end;
+  align-self: flex-end;
 `
 
 const Layout = styled.div`
@@ -160,7 +164,7 @@ const Layout = styled.div`
   flex: 1;
 ` 
 
-const Elements = { Aside, Header, AsideHeader, AsideFooter }
+const Elements = { Title, Aside, Header, AsideHeader, AsideFooter }
 
 const slots: Record<keyof typeof Elements, Slot> = Object
   .entries(Elements)

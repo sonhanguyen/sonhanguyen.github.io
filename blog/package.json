@@ -11,7 +11,7 @@
     "@sonha/web-scripts": "workspace:*",
     "@types/node": "14.0.27",
     "@types/react": "^17.0.3",
-    "astroturf": "^0.10.4",
+    "astroturf": "^1.0.0-beta.20",
     "babel-loader": "^8.1.0",
     "react-scripts": "3.4.3"
   },

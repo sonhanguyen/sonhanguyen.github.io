@@ -1,4 +1,5 @@
-import styled, { css } from 'astroturf'
+import { css } from 'astroturf'
+import styled from 'astroturf/react'
 
 css`
   @import url(~sanitize.css);
@@ -17,11 +18,14 @@ export const Theme = styled.div`
   background: var(--background);
   color: var(--foreground);
 `
-export const Styled = styled.div`
+
+export const atom = css`
   padding: .5rem;
 `
 
-export const Button = styled(Styled)`
+export const button = css`
+  composes: ${atom};
+
   background-color: var(--background);
   display: inline-block;
 
