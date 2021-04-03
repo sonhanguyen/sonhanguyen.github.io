@@ -22,27 +22,27 @@ const Shell = ({ children, Content, ...props }: Props) => {
   )
   
   return <Theme { ...props }>
-    <SplitPane
-      Layout={Layout}
-      Switch={Hambuger}
-      master={
-        <Sidebar>
-          {slots.AsideHeader.match(children)}
-          {slots.Aside.match(children)}
-          {slots.AsideFooter.match(children)}
-        </Sidebar>
-      }
-    >
-      <Body>
-        {slots.Header.match(children)}
+    <Body>
+      {slots.Header.match(children)}
+      <SplitPane
+        Layout={Layout}
+        Switch={Hambuger}
+        master={
+          <Sidebar>
+            {slots.AsideHeader.match(children)}
+            {slots.Aside.match(children)}
+            {slots.AsideFooter.match(children)}
+          </Sidebar>
+        }
+      >
         <Main>
           <MDXProvider>
             { main }
             { Content && <Content /> }
           </MDXProvider>
         </Main>
-      </Body>
-    </SplitPane>
+      </SplitPane>
+    </Body>
   </Theme>
 }
 
@@ -64,7 +64,6 @@ const Hambuger = styled.div<{ on?: boolean }>`
 
 const Main = withMediaClass(
   styled(Styled).attrs({ as: 'main' })`
-    width: var(--main-width);
     text-align: justify;
     flex: 1;
     
@@ -73,17 +72,22 @@ const Main = withMediaClass(
     }
     
     &.phone {
-      max-width: 100vw;  
+      max-width: 100vw;
+    }
+
+    & img {
+      max-width: var(--main-width);
     }
   `
 )
 
 const Sidebar = styled.aside`
-  width: var(--aside-width);
-  min-height: 100vh;
   flex-direction: column;
-  display: flex;
+  position: relative;
   text-align: right;
+  display: flex;
+  width: var(--aside-width);
+  height: 100%;
 `
 
 const Body = styled.div`
@@ -91,10 +95,6 @@ const Body = styled.div`
   flex-direction: column;
   display: flex;
   flex: 1;
-
-  & img {
-    max-width: calc(var(--main-width) + var(--aside-width));
-  }
 `
 
 const Title = styled.div`
@@ -121,11 +121,11 @@ const Header = styled(
       <Title>{ title }</Title>
     </header>
   })`
-  position: relative;
-  margin-left: calc(-1 * var(--aside-width));
+  position: sticky;
   max-width: 100%;
 
   & img {
+    width: 100%;
     object-fit: none;
     object-position: 50% 50%;
   }
@@ -137,27 +137,28 @@ const Aside = styled.nav`
 `
 
 const AsideHeader = styled.header`
+  position: absolute;
+  top: calc(-1 * var(--header-height));
   height: var(--header-height);
   width: var(--aside-width);
 `
 
 const AsideFooter = styled.footer`
-  background: blue;
+  align-content: flex-end;
 `
 
 const Layout = styled.div`
   --header-height: 7rem;
   --aside-width: 15rem;
   --main-width: 40rem;
-  
-  $width: calc(var(--main-width) + var(--aside-width));
-  
+
   max-width: 100vw;
   font-family: 'Fira Code';
   display: flex;
   margin: auto;
-  width: $width;
-`
+  width: var(--main-width);
+  flex: 1;
+` 
 
 const Elements = { Aside, Header, AsideHeader, AsideFooter }
 

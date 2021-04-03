@@ -2,28 +2,26 @@
   "name": "@sonha/blog",
   "version": "0.0.1",
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.9.4",
-    "@babel/runtime": "^7.9.2",
-    "@mdx-js/loader": "^1.5.8",
-    "@mdx-js/react": "^1.5.8",
-    "@sonha/app-scripts": "*",
-    "@sonha/scripts": "*",
-    "@sonha/web-scripts": "*",
-    "@types/node": "^13.9.0",
-    "@types/react": "^16.9.23",
+    "@babel/plugin-transform-react-jsx": "7.10.4",
+    "@babel/runtime": "7.11.2",
+    "@mdx-js/loader": "1.6.16",
+    "@mdx-js/react": "1.6.16",
+    "@sonha/app-scripts": "workspace:*",
+    "@sonha/scripts": "workspace:*",
+    "@sonha/web-scripts": "workspace:*",
+    "@types/node": "14.0.27",
+    "@types/react": "^17.0.3",
     "astroturf": "^0.10.4",
     "babel-loader": "^8.1.0",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "3.4.3"
   },
   "dependencies": {
-    "framer-motion": "^2.0.0-beta.55",
+    "framer-motion": "2.4.2",
     "gray-matter": "^4.0.2",
-    "next": "^9.3.4",
-    "react": "^16.13.1",
-    "react-use": "^14.2.0",
-    "sanitize.css": "^11.0.0",
-    "sass": "^1.26.3",
-    "typescript": "^3.8.3",
+    "react-use": "17.2.1",
+    "sanitize.css": "^11.0.1",
+    "sass": "1.26.10",
+    "typescript": "^4.2.3",
     "webfontloader": "^1.6.28"
   }
 }

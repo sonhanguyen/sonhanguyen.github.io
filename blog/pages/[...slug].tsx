@@ -6,7 +6,7 @@ export default ({ component, title, index = [], path }) => {
   const Content = component && dynamic(async () =>
     (await context(component)).default
   )
-
+console.log(path)
   index = index.map(_ => _.props)
 
   return (

@@ -20,20 +20,13 @@ const SplitPane: React.FC<React.ComponentProps<'div'> & {
   children: detail,
   Layout,
   Switch,
-  className = '',
   ...props
 }) => {
-  const [ { afloat }, dispatch ] = React.useReducer(
-    (state: State, update: Update<State>) => update(state),
-    {}
-  )
+  const [ { afloat }, dispatch ] = React.useState<State>({})
 
   const toggleAfloat = () => dispatch(toggle('afloat'))
 
-  return <Layout
-    { ...props }
-    className={`${className} ${StyleSheet.Layout}`}
-  >
+  return <Layout { ...props }>
     <Master afloat={afloat} animate>
       {wide ? null :
         <SwitchContainer on={afloat} animate>
@@ -46,16 +39,11 @@ const SplitPane: React.FC<React.ComponentProps<'div'> & {
   </Layout>
 }
 
-const StyleSheet = css`
-  .Layout {
-    position: relative;
-    display: flex;
-  }
-`
-
 const Master = withMediaClass(
   styled(motion.aside)<{ afloat?: boolean }>`
     position: absolute;
+    top: 0;
+    bottom: 0;
     right: 100%;
 
     &.wide {
@@ -69,7 +57,7 @@ const Master = withMediaClass(
 )
 
 const SwitchContainer = styled(motion.div)<{ on?: boolean }>`
-  position: absolute;
+  position: fixed;
   left: 100%;
 
   &.on {
@@ -78,4 +66,9 @@ const SwitchContainer = styled(motion.div)<{ on?: boolean }>`
   }
 `
 
-export default withMediaClass(SplitPane)
+export default withMediaClass(
+  styled(SplitPane)`
+    position: relative;
+    display: flex;  
+  `
+)

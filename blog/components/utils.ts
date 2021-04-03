@@ -14,9 +14,9 @@ function* rainbow(min = 0, max = 360) {
 export const color = rainbow()
 
 export const debugLayout = (
-  style,
+  style?: object,
   getBaseStyle = () => ({
-    outline: `2px solid hsl(${color.next().value} 30% 30%)`
+    outline: `4px solid hsl(${color.next().value} 30% 30%)`
   })
 ) => ({
   style: {

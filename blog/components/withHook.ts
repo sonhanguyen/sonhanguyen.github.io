@@ -23,7 +23,7 @@ const withHook: HocFactory = (
   const memoized = memo(component, propsAreEqual)
 
   return Object.assign(
-      props => h(memoized, {
+    props => h(memoized, {
       ...hook(props),
       ...props
     } as any),

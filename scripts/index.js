@@ -1,14 +1,21 @@
 const path = require('path') 
 const { exec } = require('gulp-execa')
 
-exports.createShell = bin => (cmd, options = {}) => {
-  const localDir = path.join(bin, 'node_modules', '.bin')
+exports.createShell = dirname => (cmd, options = {}) => {
+  const localDir = path.join(dirname, 'node_modules', '.bin')
   const { preferLocal = true, verbose = true } = options 
   
-  return exec(cmd, { localDir, ...options, preferLocal, verbose })
+  return exec(cmd, {
+    localDir,
+    preferLocal,
+    verbose,
+    shell: true,
+    stdio: 'inherit',
+    ...options
+  })
 }
 
-exports.cli = tasks => {
+exports.cli = (tasks, defaultTask = 'default') => {
   const gulp = require('gulp')
   const { series } = gulp
   require('gulp-help-four')(gulp)
@@ -22,11 +29,25 @@ exports.cli = tasks => {
       gulp.task(name, task.description, task)
     })
 
-  register(tasks)
+  register({ ...defaults, ...tasks })
   
   let [ task ] = process.argv.slice(2)
-  if (!task || task.startsWith('-')) task = 'default'
+  if (!task || task.startsWith('-')) task = defaultTask
   if (['-h', '--help'].includes(task)) task = 'help'
 
   series(task)()
+}
+
+const $ = exports.createShell(__dirname)
+const args = process.argv.slice(3).join(' ')
+
+const defaults = {
+  interactiveUpgrade() {
+    let { stdout: pnpm } = require('child_process')
+      .spawnSync(`which pnpm; exit 0`, { shell: true, stdio: 'pipe' })
+
+    if (pnpm) pnpm = 'NPM_CHECK_INSTALLER=pnpm'
+    
+    return $(`${pnpm} npm-check -u ${args}`)
+  }
 }

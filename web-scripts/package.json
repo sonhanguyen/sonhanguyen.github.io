@@ -2,13 +2,13 @@
   "name": "@sonha/web-scripts",
   "version": "1.0.0",
   "dependencies": {
-    "@mdx-js/loader": "^1.5.8",
-    "@sonha/scripts": "*",
-    "@storybook/addon-docs": "^5.3.18",
-    "@storybook/addon-info": "^5.3.18",
-    "@storybook/addon-viewport": "^5.3.18",
-    "@storybook/preset-create-react-app": "^2.1.1",
-    "@storybook/react": "^5.3.18",
+    "@mdx-js/loader": "^1.6.5",
+    "@sonha/scripts": "workspace:*",
+    "@storybook/addon-docs": "^5.3.19",
+    "@storybook/addon-info": "^5.3.19",
+    "@storybook/addon-viewport": "^5.3.19",
+    "@storybook/preset-create-react-app": "^2.1.2",
+    "@storybook/react": "^5.3.19",
     "babel-plugin-preval": "^4.0.0",
     "babel-preset-react-app": "^9.1.2"
   }

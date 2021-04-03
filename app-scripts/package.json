@@ -2,18 +2,18 @@
   "name": "@sonha/app-scripts",
   "version": "0.0.1",
   "devDependencies": {
-    "@sonha/mdx": "*",
-    "@sonha/scripts": "*",
-    "@sonha/web-scripts": "*",
-    "@sonha/webpack": "*",
-    "sass": "^1.26.5",
-    "schema-utils": "^2.6.6",
-    "sharp": "^0.25.2"
+    "@sonha/mdx": "workspace:*",
+    "@sonha/scripts": "workspace:*",
+    "@sonha/web-scripts": "workspace:*",
+    "@sonha/webpack": "workspace:*",
+    "sass": "^1.26.7",
+    "schema-utils": "^2.7.0",
+    "sharp": "^0.25.3"
   },
   "dependencies": {
-    "@babel/types": "^7.8.7",
-    "next": "^9.3.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "@babel/types": "^7.10.2",
+    "next": "10.1.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   }
 }
