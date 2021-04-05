@@ -4,16 +4,18 @@ import { motion } from 'framer-motion'
 import { withMediaClass } from 'components/withHook'
 
 type State = { afloat?: boolean }
-type Update<S> = (_: S) => S
 
-const toggle = <K extends keyof State>(key: K) => (state: State) => ({ ...state, [key]: !state[key] })
+const toggle = <K extends keyof State>(key: K) =>
+  (state: State) => ({ ...state, [key]: !state[key] })
 
 const SplitPane: React.FC<React.ComponentProps<'div'> & {
   wide?: boolean
   master: React.ReactNode
   children: React.ReactNode
-  Switch: React.ComponentType<{ on?: boolean, onClick: Function }>
-  Layout: React.ComponentType<{ className?: string }>
+  Switch?: React.ComponentType<{
+    on?: boolean, onClick: React.MouseEventHandler
+  }>
+  Layout?: React.ComponentType<{ className?: string }>
 }> = ({
   wide,
   master,
@@ -25,6 +27,12 @@ const SplitPane: React.FC<React.ComponentProps<'div'> & {
   const [ { afloat }, dispatch ] = React.useState<State>({})
 
   const toggleAfloat = () => dispatch(toggle('afloat'))
+
+  const widened = wide && afloat
+
+  React.useEffect(() => {
+    if (widened) toggleAfloat();
+  }, [widened])
 
   return <Layout { ...props }>
     <Master afloat={afloat} animate>
@@ -46,7 +54,7 @@ const Master = withMediaClass(
     bottom: 0;
     right: 100%;
 
-    &.wide {
+    &.tablet {
       position: unset;
     }
 
@@ -57,13 +65,8 @@ const Master = withMediaClass(
 )
 
 const SwitchContainer = styled(motion.div)<{ on?: boolean }>`
-  position: fixed;
+  position: absolute;
   left: 100%;
-
-  &.on {
-    left: unset;
-    right: 0;
-  }
 `
 
 export default withMediaClass(
@@ -72,3 +75,31 @@ export default withMediaClass(
     display: flex;  
   `
 )
+
+export const DefaultSwitch = styled.div<{ on?: boolean }>`
+  position: absolute;
+  font-size: 3rem;
+  
+  &:not(.on):after {
+    height: 3rem;
+    width: 3rem;
+    left: 100%;
+    content: '☰';
+  }
+
+  &.on {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+`
+
+SplitPane.defaultProps = {
+  Layout: styled.div`
+    display: flex;
+    flex: 1;
+  `,
+  Switch: DefaultSwitch
+}

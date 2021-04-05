@@ -22,7 +22,7 @@ const patchCssModulesImpure =  ({ module: { rules } }) => {
     
     return options.modules || {}
   }
-  
+
   deepFind(rules, ({ loader, rule }) =>
     /\/css-loader\//.test(loader) &&
     cssModuleOptions(rule).mode == 'pure'

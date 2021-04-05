@@ -25,8 +25,6 @@ const Shell = ({ children, Content, ...props }: Props) => {
     <Body>
       {slots.Header.match(children)}
       <SplitPane
-        Layout={Layout}
-        Switch={Hambuger}
         master={
           <Sidebar>
             {slots.AsideHeader.match(children)}
@@ -38,8 +36,8 @@ const Shell = ({ children, Content, ...props }: Props) => {
         <Main>
           <Title>{slots.Title.match(children)}</Title>
           <MDXProvider>
-            { main }
             { Content && <Content /> }
+            { main }
           </MDXProvider>
         </Main>
       </SplitPane>
@@ -47,33 +45,13 @@ const Shell = ({ children, Content, ...props }: Props) => {
   </Theme>
 }
 
-const Hambuger = styled.div<{ on?: boolean }>`
-  position: relative;
-  font-size: 3rem;
-  height: 3rem;
-  width: 3rem;
-  
-  &:after {
-    position: absolute;
-    content: '☰';
-  }
-
-  &.on:after {
-    content: '←';
-  }
-`
-
 const Main = withMediaClass(
   styled.main`
     composes: ${atom};
 
+    max-width: var(--main-width);
     text-align: justify;
-    position: relative;
 
-    &.wide {
-      max-width: calc(100vw - var(--aside-width));
-    }
-    
     &.phone {
       max-width: 100vw;
     }
@@ -91,14 +69,30 @@ const Sidebar = styled.aside`
   display: flex;
   width: var(--aside-width);
   height: 100%;
+  background: var(--background);
 `
 
-const Body = styled.div`
-  min-height: 100vh;
-  flex-direction: column;
-  display: flex;
-  flex: 1;
-`
+const Body = withMediaClass(
+  styled.div`
+    @import './components/_breakpoints.module.scss';
+
+    --header-height: 7rem;
+    --main-width: 36rem;
+    --aside-width: calc(.5 * (#{map-get($breakpoints, tablet)} - var(--main-width)));
+
+    min-height: 100vh;
+    font-family: 'Fira Code';
+    flex-direction: column;
+    display: flex;
+    flex: 1;
+
+    &.desktop {
+      ${SplitPane} {
+        margin: auto;
+      }
+    }
+  `
+)
 
 const Title = styled.div`
   position: absolute;
@@ -150,19 +144,6 @@ const AsideHeader = styled.header`
 const AsideFooter = styled.footer`
   align-self: flex-end;
 `
-
-const Layout = styled.div`
-  --header-height: 7rem;
-  --aside-width: 15rem;
-  --main-width: 40rem;
-
-  max-width: 100vw;
-  font-family: 'Fira Code';
-  display: flex;
-  margin: auto;
-  width: var(--main-width);
-  flex: 1;
-` 
 
 const Elements = { Title, Aside, Header, AsideHeader, AsideFooter }
 

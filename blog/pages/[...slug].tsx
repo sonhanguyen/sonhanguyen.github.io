@@ -28,7 +28,7 @@ export const getStaticPaths = async() => ({
   fallback: true
 })
 
-export const getStaticProps = async(route) => ({
+export const getStaticProps = async route => ({
   props: await require('../services')
     .pages(context)
     .getStaticProps(route)

@@ -2,5 +2,8 @@ const { createPatch } = require('./webpack')
 
 module.exports = {
   webpack: createPatch(),
-  assetPrefix: './'
+  assetPrefix: './',
+  // future: {
+  //   webpack5: true,
+  // }
 }

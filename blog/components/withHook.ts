@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useMedia } from 'react-use'
+import { useIsomorphicLayoutEffect } from 'react-use'
 
 export type Props<T> = T extends (_: infer P, ...rest: any[]) => any ? P : {}
 
@@ -34,22 +34,51 @@ const withHook: HocFactory = (
 export default withHook
 
 export const useMediaClass = () => {
-  const { phone, tablet } = require('components/breakpoints.module.scss')
+  const { phone, tablet } = require('components/_breakpoints.module.scss')
 
-  const types = {
-    desktop: useMedia(`(min-width: ${tablet})`, false),
-    tablet: useMedia(`(min-width: ${phone})`, false),
-    phone: true
+  const phoneQuery = `(max-width: ${phone})`
+  const desktopQuery = `(min-width: ${tablet})`
+
+  type Flag = 'phone' | 'desktop'
+
+  const [is, setFlags] = React.useState<void | Record<Flag, boolean>>()
+
+  const setFlag = (flag: Flag) => (evt = { matches: true }) => {
+    setFlags({
+      phone: false,
+      desktop: false,
+      [flag]: evt.matches,
+    })
   }
 
-  const [ device ] = Object
-    .entries(types)
-    .find((entry): entry is [ keyof typeof types, any ] => !!entry.pop())
+  useIsomorphicLayoutEffect(() => {
+    const setIsPhone = setFlag('phone')
+    const setIsDesktop = setFlag('desktop')
 
-  return {
-    ...{ [device]: true } as Record<typeof device, boolean>,
-    wide: device != 'phone'
-  }
+    const mobile = window.matchMedia(phoneQuery)
+    mobile.addEventListener('change', setIsPhone)
+
+    const desktop = window.matchMedia(desktopQuery)
+    desktop.addEventListener('change', setIsDesktop)
+
+    if (mobile.matches) setIsPhone()
+    else setIsDesktop(desktop)
+
+    return () => {
+      desktop.removeEventListener('change', setIsDesktop)
+      mobile.removeEventListener('change', setIsPhone)
+    }
+  }, [])
+
+  return is
+    ? {
+      ...is,
+      tablet: !(is.desktop || is.phone),
+      wide: !is.phone,
+    }
+    : {
+      deviceUnknown: true
+    }
 }
 
 export const withMediaClass = withHook(useMediaClass)

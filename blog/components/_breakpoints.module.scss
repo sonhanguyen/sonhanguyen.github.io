@@ -1,4 +1,4 @@
-$breakpoints: (mobile: 480px, tablet: 830px);
+$breakpoints: (phone: 576px, tablet: 992px);
 
 :export {
   @each $breakpoint, $px in $breakpoints {

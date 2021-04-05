@@ -5,18 +5,26 @@ import { button } from 'components'
 type Item = Record<'title' | 'path', string>
 
 export type Props = {
-  items: Item[]
+  className?: string
   Link?: React.ElementType<JSX.IntrinsicElements['a']>
+  items: Item[]
 }
 
-export default ({ items, Link = require('next/link').default }: Props) => <Nav>
-  {items.map(({ path, title }) =>
-    <Link key={path} href={path}>
-      <div><li className={button}>{title}</li></div>
-    </Link>
-  )}
-</Nav>
-
-const Nav = styled.ol`
+const Nav = styled(
+  ({
+    Link = require('next/link').default,
+    items,
+    ...props
+  }: Props & JSX.IntrinsicElements['ol']) =>
+    <ol { ...props }>
+      {items.map(({ path, title }) =>
+        <Link key={path} href={path}>
+          <div><li className={button}>{title}</li></div>
+        </Link>
+      )}
+    </ol>
+)`
   list-style-type: none;
 `
+
+export default Nav

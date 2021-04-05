@@ -2,25 +2,17 @@
   "name": "@sonha/blog",
   "version": "0.0.1",
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "7.10.4",
-    "@babel/runtime": "7.11.2",
-    "@mdx-js/loader": "1.6.16",
-    "@mdx-js/react": "1.6.16",
     "@sonha/app-scripts": "workspace:*",
     "@sonha/scripts": "workspace:*",
-    "@sonha/web-scripts": "workspace:*",
-    "@types/node": "14.0.27",
-    "@types/react": "^17.0.3",
-    "astroturf": "^1.0.0-beta.20",
-    "babel-loader": "^8.1.0",
-    "react-scripts": "3.4.3"
+    "@sonha/web-scripts": "workspace:*"
   },
   "dependencies": {
+    "@types/react": "^17.0.3",
+    "astroturf": "^1.0.0-beta.20",
     "framer-motion": "2.4.2",
-    "gray-matter": "^4.0.2",
     "react-use": "17.2.1",
     "sanitize.css": "^11.0.1",
-    "sass": "1.26.10",
+    "sass": "^1.32.8",
     "typescript": "^4.2.3",
     "webfontloader": "^1.6.28"
   }
