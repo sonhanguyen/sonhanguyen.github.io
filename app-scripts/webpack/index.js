@@ -1,6 +1,3 @@
-const path = require('path')
-const { createPatchWithTsConfig } = require('./aliases')
-
 exports.createPatch = (pattern = require('fs').realpathSync('../..')) => (config, { isServer } = {}) =>
   [ patchResoverWithAppsNodeModules,
     createPatchWithTsConfig(),
@@ -13,6 +10,10 @@ exports.createPatch = (pattern = require('fs').realpathSync('../..')) => (config
     config
   )
 
+const path = require('path')
+const { createPatchWithTsConfig } = require('./aliases')
+const { createPatch: createPatchForWebAssets } = require('@sonha/webpack')
+  
 const createPatchLoadersWithWorkspaceModules = pattern => ({ module: { rules } }) =>
   rules.forEach(rule => rule.include = RegExp(pattern + '(?!.*node_modules.*)'))
 
@@ -30,13 +31,13 @@ const patchCssModulesImpure =  ({ module: { rules } }) => {
 }
 
 const patchWithMdxLoader = require('@sonha/mdx')
-const createPatchForWebAssets = require('@sonha/webpack')
 
 // make webpack priority local (app's) dependencies over dependencies' dependencies
 // there might be a better way to do this with federated webpack in v5
 const patchResoverWithAppsNodeModules = ({ resolve }) => {
   const LIB = 'node_modules'
   const { modules = [ LIB ] } = resolve
+
   resolve.modules = [ path.join(process.cwd(), LIB), ...modules ]
 }
 

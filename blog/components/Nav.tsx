@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'astroturf/react'
-import { button } from 'components'
+import { button } from '../components'
 
 type Item = Record<'title' | 'path', string>
 

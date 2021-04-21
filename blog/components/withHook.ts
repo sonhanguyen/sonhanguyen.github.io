@@ -34,7 +34,7 @@ const withHook: HocFactory = (
 export default withHook
 
 export const useMediaClass = () => {
-  const { phone, tablet } = require('components/_breakpoints.module.scss')
+  const { phone, tablet } = require('./_breakpoints.module.scss')
 
   const phoneQuery = `(max-width: ${phone})`
   const desktopQuery = `(min-width: ${tablet})`
@@ -70,15 +70,11 @@ export const useMediaClass = () => {
     }
   }, [])
 
-  return is
-    ? {
-      ...is,
-      tablet: !(is.desktop || is.phone),
-      wide: !is.phone,
-    }
-    : {
-      deviceUnknown: true
-    }
+  return is ? {
+    ...is,
+    tablet: !(is.desktop || is.phone),
+    wide: !is.phone,
+  } : { deviceUnknown: true }
 }
 
 export const withMediaClass = withHook(useMediaClass)

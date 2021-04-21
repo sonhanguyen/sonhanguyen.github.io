@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'astroturf/react'
 import { motion } from 'framer-motion'
-import { withMediaClass } from 'components/withHook'
+import { withMediaClass } from '../components/withHook'
 
 type State = { afloat?: boolean }
 

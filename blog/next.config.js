@@ -6,13 +6,13 @@ const patchWithAstroturfLoader = ({ module: { rules } }) =>
     options: { extension: '.module.scss', enableCssProp: true },
   })
 
-const config = require('@sonha/app-scripts/next.config')
+const { webpack, ...base } = require('@sonha/app-scripts/next.config')
 
 module.exports = {
-  ...config,
+  ...base,
   webpack(webpackConfig, ...args) {
-    patchWithAstroturfLoader(webpackConfig)
-
-    return config.webpack(webpackConfig, ...args)
+    const config = webpack(webpackConfig, ...args)
+    patchWithAstroturfLoader(config)
+    return config
   }
 }

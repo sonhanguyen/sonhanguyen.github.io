@@ -2,10 +2,11 @@ const path = require('path')
 const { exec } = require('gulp-execa')
 
 exports.createShell = dirname => (cmd, options = {}) => {
-  const localDir = path.join(dirname, 'node_modules', '.bin')
+  const nodePath = path.join(dirname, 'node_modules')
+  const localDir = path.join(nodePath, '.bin')
   const { preferLocal = true, verbose = true } = options 
   
-  return exec(cmd, {
+  return exec(`NODE_PATH=${nodePath}:$NODE_PATH ${cmd}`, {
     localDir,
     preferLocal,
     verbose,

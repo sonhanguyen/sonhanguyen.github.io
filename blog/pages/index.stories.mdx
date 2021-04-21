@@ -1,0 +1,23 @@
+import Shell from '../components/Shell'
+import { debugLayout as css } from '../components/utils'
+
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+
+<Meta title="Shell" component={Shell} />
+
+<Canvas>
+  <Story name="all checkboxes">
+    <Shell>
+      <Shell.Header>
+        <div {...css()} />
+      </Shell.Header>
+      <Shell.Aside>
+        <div {...css()} />
+      </Shell.Aside>
+      <Shell.AsideHeader>
+        <div {...css()} />
+      </Shell.AsideHeader>
+      <div {...css()} />
+    </Shell>
+  </Story>
+</Canvas>
