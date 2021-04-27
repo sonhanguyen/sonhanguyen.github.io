@@ -2,6 +2,7 @@
   "name": "@sonha/web-scripts",
   "version": "1.0.0",
   "dependencies": {
+    "@babel/runtime": "^7.13.17",
     "@sonha/scripts": "workspace:*",
     "@storybook/addon-docs": "^6.2.7",
     "@storybook/addon-info": "^5.3.21",
